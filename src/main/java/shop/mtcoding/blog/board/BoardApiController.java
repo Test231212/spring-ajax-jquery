@@ -2,6 +2,7 @@ package shop.mtcoding.blog.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -13,6 +14,14 @@ import java.util.List;
 @RestController
 public class BoardApiController {
     private final BoardRepository boardRepository;
+    @PutMapping(value = "/api/boards/{id}")
+    public ApiUtil<?> update(@PathVariable Integer id, @RequestBody BoardRequest.UpdateDTO requestDTO, HttpServletResponse response) {
+        Board board = boardRepository.selectOne(id);
+
+        boardRepository.update(requestDTO, id);
+        return new ApiUtil<>(null);
+    }
+
 
     @PostMapping("/api/boards")
     public ApiUtil<?> write(@RequestBody BoardRequest.WriteDTO requestDTO){
